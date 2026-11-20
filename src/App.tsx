@@ -3,7 +3,7 @@ import { checkSupabaseConnection, isSupabaseConfigured } from "./lib/supabase";
 import {
   Activity, Clapperboard, CloudUpload, Compass, Film, FolderOpen,
   Gauge, Menu, Play, Radio, Scissors, Settings, Sparkles, TrendingUp,
-  Upload, WandSparkles, Zap, Youtube
+  Upload, WandSparkles, Zap
 } from "lucide-react";
 
 type Section = "dashboard" | "lives" | "editor" | "trends" | "style" | "publishing" | "settings";
@@ -14,7 +14,7 @@ const navigation: { id: Section; label: string; icon: typeof Gauge }[] = [
   { id: "editor", label: "Editor de clips", icon: Scissors },
   { id: "trends", label: "Tendências", icon: TrendingUp },
   { id: "style", label: "Meu estilo", icon: WandSparkles },
-  { id: "publishing", label: "Publicação", icon: Youtube },
+  { id: "publishing", label: "Publicação", icon: Play },
   { id: "settings", label: "Definições", icon: Settings },
 ];
 
