@@ -13,7 +13,7 @@ Plataforma web e Android para transformar vídeos e transmissões do YouTube em 
 
 ## Estado do projeto
 
-Este repositório inicia a base da interface. As integrações com Supabase, processamento de vídeo/FFmpeg, serviços de IA e publicação social serão adicionadas por etapas.
+Este repositório inicia a base da interface. A base inicial do Supabase está preparada: cliente de navegador, modelo SQL e políticas RLS. Ainda é necessário configurar as variáveis do projeto e executar o SQL no Supabase. O processamento de vídeo/FFmpeg, serviços de IA e publicação social serão adicionados por etapas.
 
 ## Stack planeada
 
