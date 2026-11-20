@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { isSupabaseConfigured } from "./lib/supabase";
+import { checkSupabaseConnection, isSupabaseConfigured } from "./lib/supabase";
 import {
   Activity, Clapperboard, CloudUpload, Compass, Film, FolderOpen,
   Gauge, Menu, Play, Radio, Scissors, Settings, Sparkles, TrendingUp,
-  Upload, WandSparkles, Zap
+  Upload, WandSparkles, Zap, Youtube
 } from "lucide-react";
 
 type Section = "dashboard" | "lives" | "editor" | "trends" | "style" | "publishing" | "settings";
@@ -22,6 +22,16 @@ function App() {
   const [active, setActive] = useState<Section>("dashboard");
   const [autoPilot, setAutoPilot] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [supabaseStatus, setSupabaseStatus] = useState<"idle" | "checking" | "connected" | "error">("idle");
+  const [supabaseMessage, setSupabaseMessage] = useState("");
+
+  async function testSupabaseConnection() {
+    setSupabaseStatus("checking");
+    setSupabaseMessage("A testar a ligação e a tabela projects…");
+    const result = await checkSupabaseConnection();
+    setSupabaseStatus(result.ok ? "connected" : "error");
+    setSupabaseMessage(result.message);
+  }
 
   const title = navigation.find((item) => item.id === active)?.label ?? "Painel";
 
@@ -90,7 +100,7 @@ function App() {
 
           {active === "publishing" && <section className="panel page-panel"><div className="panel-heading"><div><h3>Publicação</h3><p>Prepara os teus clips para os canais de destino.</p></div><Play /></div><div className="publish-targets"><div><div className="integration-logo youtube"><Play /></div><strong>YouTube Shorts</strong><p>Formato vertical e publicação através da API oficial.</p><span className="pill pending">Integração pendente</span></div><div><div className="integration-logo tiktok">♪</div><strong>TikTok</strong><p>Preparação e publicação conforme as permissões da conta.</p><span className="pill pending">Integração pendente</span></div></div></section>}
 
-          {active === "settings" && <section className="panel page-panel"><div className="panel-heading"><div><h3>Definições e ligações</h3><p>Configura os serviços do projeto com segurança.</p></div><Settings /></div><div className="settings-row"><div><strong>Base de dados — Supabase</strong><p>URL do projeto e chave publicável anon através de VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.</p></div><span className={`pill ${isSupabaseConfigured ? "connected" : "pending"}`}>{isSupabaseConfigured ? "Variáveis detetadas" : "Por configurar"}</span></div><div className="settings-row"><div><strong>Google AI</strong><p>Serviço de IA para análise e assistência de edição.</p></div><span className="pill pending">Por configurar</span></div><div className="settings-row"><div><strong>Processamento de vídeo</strong><p>FFmpeg para cortes, legendas e exportação vertical.</p></div><span className="pill pending">Por configurar</span></div><p className="security-note">Nunca introduzas chaves secretas diretamente no código ou num repositório público.</p></section>}
+          {active === "settings" && <section className="panel page-panel"><div className="panel-heading"><div><h3>Definições e ligações</h3><p>Configura os serviços do projeto com segurança.</p></div><Settings /></div><div className="settings-row"><div><strong>Base de dados — Supabase</strong><p>URL do projeto e chave publicável anon através de VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.</p></div><div><span className={`pill ${supabaseStatus === "connected" ? "connected" : "pending"}`}>{supabaseStatus === "connected" ? "Ligado" : supabaseStatus === "checking" ? "A testar…" : supabaseStatus === "error" ? "Erro de ligação" : isSupabaseConfigured ? "Configurado, por testar" : "Por configurar"}</span><br /><button className="primary-button" style={{ marginTop: 8 }} onClick={testSupabaseConnection} disabled={!isSupabaseConfigured || supabaseStatus === "checking"}>Testar ligação</button></div></div>{supabaseMessage && <p className="helper" role="status">{supabaseMessage}</p>}<div className="settings-row"><div><strong>Google AI</strong><p>Serviço de IA para análise e assistência de edição.</p></div><span className="pill pending">Por configurar</span></div><div className="settings-row"><div><strong>Processamento de vídeo</strong><p>FFmpeg para cortes, legendas e exportação vertical.</p></div><span className="pill pending">Por configurar</span></div><p className="security-note">Nunca introduzas chaves secretas diretamente no código ou num repositório público.</p></section>}
           <footer>PLANET STREAMING <span>•</span> Estúdio de criação assistido por IA <span>•</span> Versão inicial 0.1.0</footer>
         </div>
       </main>
